@@ -1,7 +1,5 @@
-module Asimov
-  module IRC
-    class Parser
-      
-    end
+class Parser
+  def initialize
+    
   end
 end

@@ -1,15 +1,21 @@
 #!/usr/bin/env ruby
 
 require 'socket'
+require 'yaml'
+require_relative 'irc/parser'
 
-class Bot
+class Asimov
+CONFIG = YAML.load_file('config.yml') unless defined? CONFIG
+
   def initialize(server, port)
-    @channel  = 'darklordpotter'
     @socket   = TCPSocket.open(server, port)
-    say "NICK Ozbot"
-    say "USER Ozbot 0 * Ozbot"
-    say "JOIN ##{@channel}"
 
+    @parser   = Parser.new
+    @channels = CONFIG['channels']
+    @nick     = CONFIG['nick']
+    
+    say "NICK #{@nick}"
+    say "USER #{@nick} 0 * #{@nick}"
   end
 
   def say msg
@@ -17,14 +23,8 @@ class Bot
     @socket.puts msg
   end
 
-  def kick msg, reason
-    nick = msg.split('!')[0]
-    nick[0] = ''
-    say "KICK ##{@channel} #{nick} :#{reason}"
-  end
-
-  def say_to_chan msg
-    say "PRIVMSG ##{@channel} :#{msg}"
+  def say_to_chan chan, msg
+    say "PRIVMSG #{chan} :#{msg}"
   end
 
   def run
@@ -32,30 +32,26 @@ class Bot
       msg = @socket.gets
       puts msg
 
+      # Connect to channels
+      
+    
       if msg.match(/^PING :(.*)$/)
         say "PONG #{$~[1]}"
         next
-      end
-
-      if msg.match(/PRIVMSG ##{@channel} :(.*)$/)
-        content = $~[1]
-
-        #put matchers here
-        if content.match("test")
-          kick msg, "test!"
-        end
       end
     end
   end
 
   def quit
-    say "PART ##{@channel} :Autobots, roll out."
-    say 'QUIT'
+    @channels.each do |c|
+      say "PART #{c['name']} #{CONFIG['quit_message']}"
+    end
+    say "QUIT"
   end
 
 end
 
-bot = Bot.new("irc.darklordpotter.net", 6667)
+bot = Asimov.new("irc.darklordpotter.net", 6667)
 
 trap("INT"){ bot.quit }
 
