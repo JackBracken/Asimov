@@ -1,0 +1,3 @@
+:Oz!uid1859@nightmare.darklordpotter.net PRIVMSG #bots :Test message foo foo foo
+:Oz!uid1859@nightmare.darklordpotter.net PRIVMSG #bots :ACTION test action foo bar baz
+:Oz!uid1859@nightmare.darklordpotter.net MODE #bots +o Asimov
