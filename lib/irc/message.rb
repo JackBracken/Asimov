@@ -1,20 +1,21 @@
 class Message
   attr_accessor :prefix, :command, :params, :trailing
 
-  def initialize
+  def initialize msg
+    @trailing
+    @prefix = @command = ''
+    @params = { }
 
-  end
-
-  def parse msg
     if msg[0] == ':'
       prefix_end = msg.index(' ')
       @prefix = msg[1..prefix_end - 1]
-      
+    end
+
+    trailing_start = msg.index(' :')
+    if trailing_start >= 0
+      @trailing = msg[(trailing_start + 2)..(msg.size - 1)]
+    else
+      @trailing = msg.size
     end
   end
 end
-
-msg = Message.new
-msg.parse(":Jack!uid1859@some.host.net PRIVMSG #channel :placeholder message")
-msg.parse(":Jack!uid1859@some.host.net PRIVMSG #channel :ACTION placeholder action")
-msg.parse(":Jack!uid1859@some.host.net MODE #channel +o Asimov")
