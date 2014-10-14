@@ -15,14 +15,12 @@ class TestMessage < Minitest::Test
   end
 
   def test_parse_trailing
-    skip
     assert_equal 'Test message', @privmsg.trailing
     assert_equal 'ACTION test action', @user_action.trailing
-    assert_equal '', @user_mode.trailing
+    assert_nil @user_mode.trailing
   end
 
   def test_parse_command
-    skip
     assert_equal 'PRIVMSG', @privmsg.command
     assert_equal 'PRIVMSG', @user_action.command
     assert_equal 'MODE', @user_mode.command
