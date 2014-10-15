@@ -27,6 +27,10 @@ class TestMessage < Minitest::Test
   end
 
   def test_parse_params
-    skip
+    assert_equal '#channel', @privmsg.params[0]
+    assert_equal '#channel', @user_action.params[0]
+    assert_equal '#channel', @user_mode.params[0]
+    assert_equal '+o',       @user_mode.params[1]
+    assert_equal 'Asimov',   @user_mode.params[2]
   end
 end
