@@ -1,12 +1,12 @@
 class Message
   attr_accessor :prefix, :command, :params, :trailing
 
-  def initialize msg
-    @trailing
+  def initialize(msg)
+    @trailing = nil
     @prefix = @command = ''
     @params = []
     prefix_end = trailing_start = -1
-    
+
     # get prefix if there is one
     if msg[0] == ':'
       prefix_end = msg.index(' ')
@@ -14,8 +14,8 @@ class Message
     end
 
     # get trailing if there is one
-    if msg.index(' :') then trailing_start = msg.index(' :') end
-    
+    trailing_start = msg.index(' :') if msg.index(' :')
+
     if trailing_start >= 0
       @trailing = msg[(trailing_start + 2)..(msg.size - 1)]
     else
@@ -27,8 +27,8 @@ class Message
 
     @command = cmd_with_params[0]
     @params = cmd_with_params[1..-1]
-    
+
     # remove any empty or nil elements that slip in
-    @params.reject!{ |e| e.to_s.empty? }    
+    @params.reject! { |e| e.to_s.empty? }
   end
 end
