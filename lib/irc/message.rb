@@ -29,6 +29,6 @@ class Message
     @params = cmd_with_params[1..-1]
     
     # remove any empty or nil elements that slip in
-    @params.reject!{ |e| e.tos_.empty? }    
+    @params.reject!{ |e| e.to_s.empty? }    
   end
 end
