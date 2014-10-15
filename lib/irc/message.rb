@@ -29,10 +29,6 @@ class Message
     @params = cmd_with_params[1..-1]
     
     # remove any empty or nil elements that slip in
-    @params.reject!{ |e| e.to_s.empty? }    
+    @params.reject!{ |e| e.tos_.empty? }    
   end
 end
-
-@privmsg      =  Message.new(':Foo!uid1234@some.host.net PRIVMSG #channel :Test message')
-@user_action  =  Message.new(':Foo!uid1234@some.host.net PRIVMSG #channel :ACTION test action')
-@user_mode    =  Message.new(':Foo!uid1234@some.host.net MODE #channel +o Asimov')
