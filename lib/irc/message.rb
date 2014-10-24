@@ -1,3 +1,7 @@
+# Messages are broken down into prefix (usually the sender),
+# the command (PRIVMSG, PING, etc.), the params if there are
+# any, and the 'trailing', which is often the message itself
+# if there is one.
 class Message
   attr_accessor :prefix, :command, :params, :trailing
 
