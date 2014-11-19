@@ -2,12 +2,11 @@
 
 require 'socket'
 require 'yaml'
-require_relative 'plugin_loader'
 
 # Main bot class
 class Asimov
   CONFIG = YAML.load_file('config.yml') unless defined? CONFIG
-  def initialize(server, port)
+  def connect(server, port)
     @socket   = TCPSocket.open(server, port)
 
     @channels = CONFIG['channels']
@@ -16,25 +15,25 @@ class Asimov
     say "NICK #{@nick}"
     say "USER #{@nick} 0 * #{@nick}"
 
-    authenticated = false
-
-    until authenticated
-      msg = @socket.gets
-      puts msg
-
-      if msg.match(/^PING :(.*)$/)
-        say "PONG #{Regexp.last_match[1]}"
-        next
-      end
-
-      authenticated = true if msg.include?("End of \/MOTD command")
-    end
+    authenticate
 
     @channels.each do |chan|
       say "JOIN #{chan['name']}"
     end
 
     puts @socket.gets
+  end
+
+  def authenticate
+    authenticated = false
+    until authenticated
+      msg = @socket.gets
+      puts msg
+
+      pong(msg)
+
+      authenticated = true if msg.include?("End of \/MOTD command")
+    end
   end
 
   def say(msg)
@@ -50,11 +49,7 @@ class Asimov
     until @socket.eof?
       msg = @socket.gets
       puts msg
-
-      if msg.match(/^PING :(.*)$/)
-        say "PONG #{Regexp.last_match[1]}"
-        next
-      end
+      pong(msg)
     end
   end
 
@@ -64,8 +59,13 @@ class Asimov
     end
     say 'QUIT'
   end
+
+  def pong(msg)
+    say "PONG #{Regexp.last_match[1]}" if msg.match(/^PING :(.*)$/)
+  end
 end
 
-bot = Asimov.new('irc.darklordpotter.net', 6667)
+bot = Asimov.new
+bot.connect('irc.darklordpotter.net', 6667)
 trap('INT') { bot.quit }
 bot.run

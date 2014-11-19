@@ -1,3 +1,4 @@
+server: 'irc.darklordpotter.net'
 nick: 'Asimov'
 pass: ''
 channels:
@@ -5,7 +6,7 @@ channels:
     key: ''
   #- name: '#darklordpotter'
   #  key: ''
-  - name: '#programming'
-    key: ''
+  #- name: '#programming'
+  #  key: ''
 prefix: '@'
 quit_message: '"Whether we are based on carbon or on silicon makes no fundamental difference; we should each be treated with appropriate respect." —Arthur C. Clarke'
